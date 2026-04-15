@@ -113,7 +113,7 @@ export default function Navbar() {
               to="/contact"
               className="flex items-center justify-center w-full px-5 py-3 text-sm font-semibold rounded-xl bg-gradient-to-r from-[#2563EB] to-[#7C3AED] text-white"
             >
-              Start Project
+              Démarrer un Projet
             </Link>
           </div>
         </div>

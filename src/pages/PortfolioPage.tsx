@@ -230,11 +230,11 @@ function CaseStudy() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#7C3AED]/10 border border-[#7C3AED]/20 text-[#7C3AED] text-xs font-semibold uppercase tracking-widest mb-6">
-            Featured Case Study
+            Étude de Cas en Vedette
           </div>
           <h2 className="text-3xl sm:text-4xl font-black text-white">
             From struggling funnel to{' '}
-            <span className="gradient-text">18% conversion rate</span>
+            <span className="gradient-text">18% de taux de conversion</span>
           </h2>
         </div>
 

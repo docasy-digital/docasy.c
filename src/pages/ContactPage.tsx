@@ -336,28 +336,28 @@ function FAQSection() {
 
   const faqs = [
     {
-      q: 'How long does it take to build a website?',
-      a: 'Depending on complexity, most websites are delivered in 3–14 business days. Simple landing pages can be done in 3–5 days. Full custom websites typically take 2–4 weeks. We always provide a clear timeline before starting.',
+      q: 'Combien de temps faut-il pour créer un site web ?',
+      a: 'Selon la complexité, la plupart des sites web sont livrés en 3 à 14 jours ouvrables. Les landing pages simples peuvent être faites en 3 à 5 jours. Les sites web personnalisés complets prennent généralement 2 à 4 semaines. Nous fournissons toujours un calendrier précis avant de commencer.',
     },
     {
-      q: 'What does a project with DOCASY include?',
-      a: 'Every project includes: strategy session, custom design, development, revisions, testing, launch support, and a 30-day post-launch support period. No hidden fees.',
+      q: 'Que comprend un projet avec DOCASY ?',
+      a: 'Chaque projet inclut : session de stratégie, design sur mesure, développement, révisions, tests, support au lancement, et une période de support post-lancement de 30 jours. Sans frais cachés.',
     },
     {
-      q: 'Do you offer ongoing support after launch?',
-      a: 'Yes! We offer monthly maintenance packages including updates, security monitoring, content changes, and performance optimization. Many clients choose ongoing partnerships.',
+      q: 'Offrez-vous un support continu après le lancement ?',
+      a: 'Oui ! Nous proposons des forfaits de maintenance mensuels incluant les mises à jour, la surveillance de sécurité, les modifications de contenu et l\'optimisation des performances. Beaucoup de clients choisissent des partenariats durables.',
     },
     {
-      q: 'What makes DOCASY different from other agencies?',
-      a: 'We\'re conversion-first. Every decision is made with your business growth in mind — not just aesthetics. We combine design excellence with strategic marketing thinking to deliver measurable ROI.',
+      q: 'Qu\'est-ce qui différencie DOCASY des autres agences ?',
+      a: 'Nous sommes axés sur la conversion. Chaque décision est prise dans un esprit de croissance pour votre entreprise — pas seulement pour l\'esthétique. Nous combinons l\'excellence du design avec une réflexion marketing stratégique pour livrer un ROI mesurable.',
     },
     {
-      q: 'Can you work with an existing website?',
-      a: 'Absolutely. We offer redesigns, performance optimization, and conversion rate optimization for existing sites. We\'ll audit your current site and recommend the most impactful changes.',
+      q: 'Pouvez-vous travailler sur un site web existant ?',
+      a: 'Absolument. Nous proposons des refontes, l\'optimisation des performances et l\'optimisation du taux de conversion pour les sites existants. Nous analyserons votre site actuel et recommanderons les changements les plus impactants.',
     },
     {
-      q: 'How do I get started?',
-      a: 'Fill in the contact form above or message us on WhatsApp. We\'ll schedule a free 30-minute strategy call to understand your needs and share our recommendations — no strings attached.',
+      q: 'Comment puis-je commencer ?',
+      a: 'Remplissez le formulaire de contact ci-dessus ou envoyez-nous un message sur WhatsApp. Nous planifierons un appel stratégie gratuit de 30 minutes pour comprendre vos besoins et partager nos recommandations — sans engagement.',
     },
   ];
 
@@ -368,10 +368,10 @@ function FAQSection() {
       <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
-            Frequently Asked{' '}
-            <span className="gradient-text">Questions</span>
+            Questions{' '}
+            <span className="gradient-text">Fréquentes</span>
           </h2>
-          <p className="text-white/50">Everything you need to know before getting started.</p>
+          <p className="text-white/50">Tout ce que vous devez savoir avant de démarrer votre projet.</p>
         </div>
 
         <div className="space-y-3">
@@ -403,14 +403,14 @@ function FAQSection() {
         </div>
 
         <div className="mt-12 text-center">
-          <p className="text-white/40 text-sm mb-4">Still have questions?</p>
+          <p className="text-white/40 text-sm mb-4">D'autres questions ?</p>
           <a
             href="https://wa.me/1234567890"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#25D366] text-white font-semibold text-sm hover:shadow-[0_0_20px_rgba(37,211,102,0.4)] transition-all duration-300 hover:scale-105"
           >
-            💬 Ask Us on WhatsApp
+            💬 Demandez-nous sur WhatsApp
           </a>
         </div>
       </div>
