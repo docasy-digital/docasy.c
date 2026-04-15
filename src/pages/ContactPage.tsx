@@ -1,7 +1,34 @@
 import { useState } from 'react';
 import {
-  Mail, Phone, MapPin, Clock, ArrowRight, CheckCircle, Sparkles, Send
+  Mail, Phone, MapPin, Clock, ArrowRight, CheckCircle, Sparkles, Send,
+  AlertCircle, AlertTriangle, XCircle
 } from 'lucide-react';
+import { useContactForm } from '../hooks/useContactForm';
+
+// ─── Composant d'affichage des erreurs ────────────────────────────────────────
+
+interface FieldErrorDisplayProps {
+  message: string;
+  severity: 'error' | 'warning';
+}
+
+function FieldErrorDisplay({ message, severity }: FieldErrorDisplayProps) {
+  if (severity === 'warning') {
+    return (
+      <div className="flex items-center gap-1.5 mt-1.5 text-amber-400/90 text-xs">
+        <AlertTriangle size={12} className="flex-shrink-0" />
+        <span>{message}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-1.5 mt-1.5 text-red-400/90 text-xs">
+      <AlertCircle size={12} className="flex-shrink-0" />
+      <span>{message}</span>
+    </div>
+  );
+}
 
 function PageHero() {
   return (
@@ -26,29 +53,21 @@ function PageHero() {
   );
 }
 
+// ─── Section Contact ───────────────────────────────────────────────────────────
+
 function ContactSection() {
-  const [formState, setFormState] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    service: '',
-    budget: '',
-    message: '',
-  });
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormState(prev => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setLoading(false);
-    setSubmitted(true);
-  };
+  const {
+    values,
+    errors,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    resetForm,
+    getFieldError,
+    getFieldClasses,
+    isSubmitting,
+    isSuccess,
+  } = useContactForm();
 
   const services = [
     'Création de Site Web',
@@ -80,9 +99,9 @@ function ContactSection() {
       icon: Phone,
       color: '#25D366',
       label: 'WhatsApp',
-      value: '+1 (234) 567-890',
+      value: '+229 01 60 39 39 06',
       sub: 'Discutez avec nous directement',
-      href: 'https://wa.me/1234567890',
+      href: 'https://wa.me/2290160393906',
     },
     {
       icon: MapPin,
@@ -135,7 +154,7 @@ function ContactSection() {
 
             {/* WhatsApp quick CTA */}
             <a
-              href="https://wa.me/1234567890?text=Bonjour%20DOCASY!%20Je%20souhaiterais%20discuter%20d'un%20projet."
+              href="https://wa.me/2290160393906?text=Bonjour%20DOCASY!%20Je%20souhaiterais%20discuter%20d'un%20projet."
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-3 w-full p-4 rounded-2xl bg-[#25D366] text-white font-bold hover:shadow-[0_0_30px_rgba(37,211,102,0.4)] transition-all duration-300 hover:scale-105 active:scale-95"
@@ -170,155 +189,219 @@ function ContactSection() {
           {/* Right: Form */}
           <div className="lg:col-span-3">
             <div className="p-8 md:p-10 rounded-3xl bg-white/3 border border-white/8">
-              {submitted ? (
+              {isSuccess ? (
+                /* ─── État de succès ─────────────────────────────────────── */
                 <div className="flex flex-col items-center justify-center text-center py-16">
-                  <div className="w-20 h-20 rounded-full bg-[#10B981]/10 border border-[#10B981]/30 flex items-center justify-center mb-6">
-                    <CheckCircle size={36} className="text-[#10B981]" />
+                  <div className="relative mb-6">
+                    <div className="w-24 h-24 rounded-full bg-emerald-500/10 border-2 border-emerald-500/30 flex items-center justify-center">
+                      <CheckCircle size={44} className="text-emerald-500" />
+                    </div>
+                    {/* Pulse ring */}
+                    <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20 animate-ping" />
                   </div>
-                  <h3 className="text-white font-black text-2xl mb-3">Message Reçu ! 🎉</h3>
-                  <p className="text-white/55 text-base max-w-sm leading-relaxed mb-6">
-                    Merci de nous avoir contactés ! Notre équipe va examiner les détails de votre projet et reviendra vers vous sous 24 heures.
+
+                  <h3 className="text-white font-black text-2xl mb-3">
+                    Demande Envoyée avec Succès ! 🎉
+                  </h3>
+
+                  <p className="text-white/55 text-base max-w-sm leading-relaxed mb-2">
+                    Merci de nous avoir contactés ! Votre demande a été transmise à notre équipe via WhatsApp.
                   </p>
-                  <div className="flex gap-3">
+                  <p className="text-emerald-400/80 text-sm mb-6">
+                    ⏱️ Nous reviendrons vers vous sous 24 heures.
+                  </p>
+
+                  <div className="flex flex-col sm:flex-row gap-3">
                     <button
-                      onClick={() => { setSubmitted(false); setFormState({ name: '', email: '', phone: '', service: '', budget: '', message: '' }); }}
+                      onClick={resetForm}
                       className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-medium text-sm hover:bg-white/10 transition-colors"
                     >
-                      Envoyer un autre
+                      Envoyer un autre message
                     </button>
                     <a
-                      href="https://wa.me/1234567890"
+                      href="https://wa.me/2290160393906"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-6 py-3 rounded-xl bg-[#25D366] text-white font-medium text-sm hover:bg-[#22C55E] transition-colors"
+                      className="px-6 py-3 rounded-xl bg-[#25D366] text-white font-medium text-sm hover:bg-[#22C55E] transition-colors flex items-center justify-center gap-2"
                     >
-                      Discuter sur WhatsApp
+                      <span>💬</span>
+                      <span>Ouvrir WhatsApp</span>
                     </a>
                   </div>
                 </div>
               ) : (
+                /* ─── Formulaire ─────────────────────────────────────────── */
                 <>
                   <div className="mb-8">
                     <h2 className="text-white font-black text-2xl md:text-3xl mb-2">Démarrez Votre Projet</h2>
                     <p className="text-white/45 text-sm">Remplissez les détails ci-dessous et nous préparerons une proposition personnalisée pour vous.</p>
+
+                    {/* Indicateur d'erreurs globales */}
+                    {Object.keys(errors).length > 0 && (
+                      <div className="mt-4 flex items-start gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+                        <AlertOctagon size={16} className="text-red-400 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-red-400 text-xs font-semibold">
+                            Veuillez corriger les erreurs ci-dessous.
+                          </p>
+                          <p className="text-red-400/60 text-xs">
+                            {Object.values(errors).filter(e => e.severity === 'error').length} champ(s) à corriger
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
-                  <form onSubmit={handleSubmit} className="space-y-5">
+                  <form onSubmit={handleSubmit} className="space-y-5" noValidate>
                     {/* Name & Email */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Nom */}
                       <div>
-                        <label className="block text-white/50 text-xs font-medium uppercase tracking-wider mb-2">
+                        <label htmlFor="name" className="block text-white/50 text-xs font-medium uppercase tracking-wider mb-2">
                           Nom Complet *
                         </label>
                         <input
+                          id="name"
                           type="text"
                           name="name"
-                          value={formState.name}
+                          value={values.name}
                           onChange={handleChange}
-                          required
+                          onBlur={handleBlur}
                           placeholder="Jean Dupont"
-                          className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#2563EB]/50 focus:bg-white/8 transition-all duration-200"
+                          className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white placeholder-white/25 text-sm focus:outline-none focus:bg-white/8 transition-all duration-200 ${getFieldClasses('name')}`}
                         />
+                        {getFieldError('name') && (
+                          <FieldErrorDisplay message={getFieldError('name')!.message} severity={getFieldError('name')!.severity} />
+                        )}
                       </div>
+
+                      {/* Email */}
                       <div>
-                        <label className="block text-white/50 text-xs font-medium uppercase tracking-wider mb-2">
+                        <label htmlFor="email" className="block text-white/50 text-xs font-medium uppercase tracking-wider mb-2">
                           Adresse Email *
                         </label>
                         <input
+                          id="email"
                           type="email"
                           name="email"
-                          value={formState.email}
+                          value={values.email}
                           onChange={handleChange}
-                          required
+                          onBlur={handleBlur}
                           placeholder="jean@entreprise.com"
-                          className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#2563EB]/50 focus:bg-white/8 transition-all duration-200"
+                          className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white placeholder-white/25 text-sm focus:outline-none focus:bg-white/8 transition-all duration-200 ${getFieldClasses('email')}`}
                         />
+                        {getFieldError('email') && (
+                          <FieldErrorDisplay message={getFieldError('email')!.message} severity={getFieldError('email')!.severity} />
+                        )}
                       </div>
                     </div>
 
                     {/* Phone */}
                     <div>
-                      <label className="block text-white/50 text-xs font-medium uppercase tracking-wider mb-2">
+                      <label htmlFor="phone" className="block text-white/50 text-xs font-medium uppercase tracking-wider mb-2">
                         Téléphone / WhatsApp
                       </label>
                       <input
+                        id="phone"
                         type="tel"
                         name="phone"
-                        value={formState.phone}
+                        value={values.phone}
                         onChange={handleChange}
-                        placeholder="+33 6 00 00 00 00"
-                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#2563EB]/50 focus:bg-white/8 transition-all duration-200"
+                        onBlur={handleBlur}
+                        placeholder="+229 01 60 39 39 06"
+                        className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white placeholder-white/25 text-sm focus:outline-none focus:bg-white/8 transition-all duration-200 ${getFieldClasses('phone')}`}
                       />
+                      {getFieldError('phone') && (
+                        <FieldErrorDisplay message={getFieldError('phone')!.message} severity={getFieldError('phone')!.severity} />
+                      )}
                     </div>
 
                     {/* Service & Budget */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Service */}
                       <div>
-                        <label className="block text-white/50 text-xs font-medium uppercase tracking-wider mb-2">
+                        <label htmlFor="service" className="block text-white/50 text-xs font-medium uppercase tracking-wider mb-2">
                           Service Souhaité *
                         </label>
                         <select
+                          id="service"
                           name="service"
-                          value={formState.service}
+                          value={values.service}
                           onChange={handleChange}
-                          required
-                          className="w-full px-4 py-3 rounded-xl bg-[#1e293b] border border-white/10 text-white text-sm focus:outline-none focus:border-[#2563EB]/50 transition-all duration-200 appearance-none"
+                          onBlur={handleBlur}
+                          className={`w-full px-4 py-3 rounded-xl bg-[#1e293b] border text-white text-sm focus:outline-none transition-all duration-200 appearance-none ${getFieldClasses('service')}`}
                         >
                           <option value="" disabled>Sélectionnez un service</option>
                           {services.map(s => <option key={s} value={s}>{s}</option>)}
                         </select>
+                        {getFieldError('service') && (
+                          <FieldErrorDisplay message={getFieldError('service')!.message} severity={getFieldError('service')!.severity} />
+                        )}
                       </div>
+
+                      {/* Budget */}
                       <div>
-                        <label className="block text-white/50 text-xs font-medium uppercase tracking-wider mb-2">
+                        <label htmlFor="budget" className="block text-white/50 text-xs font-medium uppercase tracking-wider mb-2">
                           Budget Estimé *
                         </label>
                         <select
+                          id="budget"
                           name="budget"
-                          value={formState.budget}
+                          value={values.budget}
                           onChange={handleChange}
-                          required
-                          className="w-full px-4 py-3 rounded-xl bg-[#1e293b] border border-white/10 text-white text-sm focus:outline-none focus:border-[#2563EB]/50 transition-all duration-200 appearance-none"
+                          onBlur={handleBlur}
+                          className={`w-full px-4 py-3 rounded-xl bg-[#1e293b] border text-white text-sm focus:outline-none transition-all duration-200 appearance-none ${getFieldClasses('budget')}`}
                         >
                           <option value="" disabled>Sélectionnez une fourchette</option>
                           {budgets.map(b => <option key={b} value={b}>{b}</option>)}
                         </select>
+                        {getFieldError('budget') && (
+                          <FieldErrorDisplay message={getFieldError('budget')!.message} severity={getFieldError('budget')!.severity} />
+                        )}
                       </div>
                     </div>
 
                     {/* Message */}
                     <div>
-                      <label className="block text-white/50 text-xs font-medium uppercase tracking-wider mb-2">
+                      <label htmlFor="message" className="block text-white/50 text-xs font-medium uppercase tracking-wider mb-2">
                         Détails du Projet *
                       </label>
                       <textarea
+                        id="message"
                         name="message"
-                        value={formState.message}
+                        value={values.message}
                         onChange={handleChange}
-                        required
+                        onBlur={handleBlur}
                         rows={5}
                         placeholder="Parlez-nous de vos objectifs, de votre calendrier et de toute exigence spécifique..."
-                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#2563EB]/50 focus:bg-white/8 transition-all duration-200 resize-none"
+                        className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white placeholder-white/25 text-sm focus:outline-none focus:bg-white/8 transition-all duration-200 resize-none ${getFieldClasses('message')}`}
                       />
+                      {getFieldError('message') && (
+                        <FieldErrorDisplay message={getFieldError('message')!.message} severity={getFieldError('message')!.severity} />
+                      )}
                     </div>
 
                     {/* Submit */}
                     <button
                       type="submit"
-                      disabled={loading}
+                      disabled={isSubmitting}
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-[#2563EB] to-[#7C3AED] text-white font-bold text-base shadow-2xl hover:shadow-[0_0_40px_rgba(37,99,235,0.4)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100 flex items-center justify-center gap-2"
                     >
-                      {loading ? (
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      {isSubmitting ? (
+                        <>
+                          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          <span>Envoi en cours...</span>
+                        </>
                       ) : (
                         <>
-                          <span>Envoyer ma Demande</span>
+                          <span>Envoyer ma Demande via WhatsApp</span>
                           <Send size={18} />
                         </>
                       )}
                     </button>
 
                     <p className="text-center text-white/25 text-xs">
-                      En envoyant ce formulaire, vous acceptez nos <a href="#" className="underline hover:text-white/40 transition-colors">Conditions</a> et <a href="#" className="underline hover:text-white/40 transition-colors">Politique de Confidentialité</a>.
+                      En envoyant ce formulaire, votre demande sera transmise directement via WhatsApp. Nous répondons sous 24h.
                     </p>
                   </form>
                 </>
