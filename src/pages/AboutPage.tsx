@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import {
   ArrowRight, Target, Eye, Heart,
-  Globe, Users, Award, TrendingUp, Sparkles, Star
+  Globe, Users, Award, TrendingUp, Sparkles, Star,
+  Crosshair, Rocket, Handshake, BarChart2, Lightbulb
 } from 'lucide-react';
 
 function PageHero() {
@@ -223,12 +224,12 @@ function Founder() {
 
 function TeamValues() {
   const values = [
-    { icon: '🎯', title: 'Précision', desc: 'Nous sommes obsédés par les détails qui génèrent de grands résultats.' },
-    { icon: '🚀', title: 'Vitesse', desc: 'Livraison rapide sans compromis sur la qualité.' },
-    { icon: '🤝', title: 'Partenariat', desc: 'Nous traitons chaque client comme un partenaire à long terme.' },
-    { icon: '📊', title: 'Basé sur les Données', desc: 'Décisions appuyées par des analyses, pas par des suppositions.' },
-    { icon: '💡', title: 'Innovation', desc: 'Toujours en utilisant les outils les plus récents et les plus efficaces.' },
-    { icon: '✨', title: 'Excellence', desc: 'Qualité premium dans tout ce que nous livrons.' },
+    { icon: Crosshair, title: 'Précision', desc: 'Nous sommes obsédés par les détails qui génèrent de grands résultats.' },
+    { icon: Rocket, title: 'Vitesse', desc: 'Livraison rapide sans compromis sur la qualité.' },
+    { icon: Handshake, title: 'Partenariat', desc: 'Nous traitons chaque client comme un partenaire à long terme.' },
+    { icon: BarChart2, title: 'Basé sur les Données', desc: 'Décisions appuyées par des analyses, pas par des suppositions.' },
+    { icon: Lightbulb, title: 'Innovation', desc: 'Toujours en utilisant les outils les plus récents et les plus efficaces.' },
+    { icon: Award, title: 'Excellence', desc: 'Qualité premium dans tout ce que nous livrons.' },
   ];
 
   return (
@@ -246,16 +247,21 @@ function TeamValues() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-16">
-          {values.map((v) => (
-            <div
-              key={v.title}
-              className="group p-5 rounded-2xl bg-white/3 border border-white/8 hover:border-[#2563EB]/30 transition-all duration-300 hover:-translate-y-1 text-center"
-            >
-              <div className="text-3xl mb-3">{v.icon}</div>
-              <h4 className="text-white font-bold text-sm mb-1">{v.title}</h4>
-              <p className="text-white/40 text-xs leading-relaxed">{v.desc}</p>
-            </div>
-          ))}
+          {values.map((v) => {
+            const Icon = v.icon;
+            return (
+              <div
+                key={v.title}
+                className="group p-5 rounded-2xl bg-white/3 border border-white/8 hover:border-[#2563EB]/30 transition-all duration-300 hover:-translate-y-1 text-center"
+              >
+                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#2563EB]/10 to-[#7C3AED]/10 border border-[#2563EB]/20 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <Icon size={20} className="text-[#2563EB]" />
+                </div>
+                <h4 className="text-white font-bold text-sm mb-1">{v.title}</h4>
+                <p className="text-white/40 text-xs leading-relaxed">{v.desc}</p>
+              </div>
+            );
+          })}
         </div>
 
         {/* CTA */}
