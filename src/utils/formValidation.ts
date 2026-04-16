@@ -13,8 +13,8 @@ export interface ValidationResult {
 
 // ─── Fonctions de validation individuelles ─────────────────────────────────────
 
-export function validateName(value: string): FieldError | null {
-  const trimmed = value.trim();
+export function validateName(value: string | undefined | null): FieldError | null {
+  const trimmed = (value ?? '').trim();
 
   if (!trimmed) {
     return { field: 'name', message: 'Le nom est requis.', severity: 'error' };
@@ -31,8 +31,8 @@ export function validateName(value: string): FieldError | null {
   return null;
 }
 
-export function validateEmail(value: string): FieldError | null {
-  const trimmed = value.trim();
+export function validateEmail(value: string | undefined | null): FieldError | null {
+  const trimmed = (value ?? '').trim();
 
   if (!trimmed) {
     return { field: 'email', message: "L'email est requis.", severity: 'error' };
@@ -46,8 +46,8 @@ export function validateEmail(value: string): FieldError | null {
   return null;
 }
 
-export function validatePhone(value: string): FieldError | null {
-  const trimmed = value.trim();
+export function validatePhone(value: string | undefined | null): FieldError | null {
+  const trimmed = (value ?? '').trim();
 
   // Téléphone optionnel mais si renseigné, doit être valide
   if (!trimmed) {
@@ -66,7 +66,7 @@ export function validatePhone(value: string): FieldError | null {
   return null;
 }
 
-export function validateService(value: string): FieldError | null {
+export function validateService(value: string | undefined | null): FieldError | null {
   if (!value) {
     return { field: 'service', message: 'Veuillez sélectionner un service.', severity: 'error' };
   }
@@ -74,7 +74,7 @@ export function validateService(value: string): FieldError | null {
   return null;
 }
 
-export function validateBudget(value: string): FieldError | null {
+export function validateBudget(value: string | undefined | null): FieldError | null {
   if (!value) {
     return { field: 'budget', message: 'Veuillez sélectionner une fourchette de budget.', severity: 'error' };
   }
@@ -82,8 +82,8 @@ export function validateBudget(value: string): FieldError | null {
   return null;
 }
 
-export function validateMessage(value: string): FieldError | null {
-  const trimmed = value.trim();
+export function validateMessage(value: string | undefined | null): FieldError | null {
+  const trimmed = (value ?? '').trim();
 
   if (!trimmed) {
     return { field: 'message', message: 'Le message est requis.', severity: 'error' };
@@ -140,7 +140,7 @@ export function validateContactForm(values: FormValues): ValidationResult {
 
 // ─── Validation d'un seul champ ────────────────────────────────────────────────
 
-export function validateField(fieldName: keyof FormValues, value: string): FieldError | null {
+export function validateField(fieldName: keyof FormValues, value: string | undefined | null): FieldError | null {
   switch (fieldName) {
     case 'name': return validateName(value);
     case 'email': return validateEmail(value);

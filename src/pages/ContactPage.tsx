@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   Mail, Phone, MapPin, Clock, ArrowRight, CheckCircle, Sparkles, Send,
-  AlertCircle, AlertTriangle, XCircle
+  AlertCircle, AlertTriangle
 } from 'lucide-react';
 import { useContactForm } from '../hooks/useContactForm';
 
@@ -65,6 +65,7 @@ function ContactSection() {
     resetForm,
     getFieldError,
     getFieldClasses,
+    getSelectClasses,
     isSubmitting,
     isSuccess,
   } = useContactForm();
@@ -239,7 +240,7 @@ function ContactSection() {
                     {/* Indicateur d'erreurs globales */}
                     {Object.keys(errors).length > 0 && (
                       <div className="mt-4 flex items-start gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20">
-                        <AlertOctagon size={16} className="text-red-400 flex-shrink-0 mt-0.5" />
+                        <AlertCircle size={16} className="text-red-400 flex-shrink-0 mt-0.5" />
                         <div>
                           <p className="text-red-400 text-xs font-semibold">
                             Veuillez corriger les erreurs ci-dessous.
@@ -329,7 +330,7 @@ function ContactSection() {
                           value={values.service}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          className={`w-full px-4 py-3 rounded-xl bg-[#1e293b] border text-white text-sm focus:outline-none transition-all duration-200 appearance-none ${getFieldClasses('service')}`}
+                          className={`w-full px-4 py-3 rounded-xl bg-[#1e293b] border text-white text-sm focus:outline-none transition-all duration-200 appearance-none ${getSelectClasses('service')}`}
                         >
                           <option value="" disabled>Sélectionnez un service</option>
                           {services.map(s => <option key={s} value={s}>{s}</option>)}
@@ -350,7 +351,7 @@ function ContactSection() {
                           value={values.budget}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          className={`w-full px-4 py-3 rounded-xl bg-[#1e293b] border text-white text-sm focus:outline-none transition-all duration-200 appearance-none ${getFieldClasses('budget')}`}
+                          className={`w-full px-4 py-3 rounded-xl bg-[#1e293b] border text-white text-sm focus:outline-none transition-all duration-200 appearance-none ${getSelectClasses('budget')}`}
                         >
                           <option value="" disabled>Sélectionnez une fourchette</option>
                           {budgets.map(b => <option key={b} value={b}>{b}</option>)}

@@ -31,6 +31,7 @@ export interface UseContactFormReturn {
   // Utilitaires
   getFieldError: (fieldName: string) => FieldError | undefined;
   getFieldClasses: (fieldName: string) => string;
+  getSelectClasses: (fieldName: string) => string;
 }
 
 // ─── État initial du formulaire ────────────────────────────────────────────────
@@ -72,11 +73,12 @@ export function useContactForm(): UseContactFormReturn {
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setValues(prev => ({ ...prev, [name]: value }));
+    const safeValue = value ?? '';
+    setValues(prev => ({ ...prev, [name]: safeValue }));
 
     // Si le champ a déjà été touché, on re-valide en temps réel
     if (touched[name]) {
-      validateFieldCallback(name as keyof FormValues, value);
+      validateFieldCallback(name as keyof FormValues, safeValue);
     }
   }, [touched, validateFieldCallback]);
 
@@ -84,8 +86,9 @@ export function useContactForm(): UseContactFormReturn {
 
   const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    const safeValue = value ?? '';
     setTouched(prev => ({ ...prev, [name]: true }));
-    validateFieldCallback(name as keyof FormValues, value);
+    validateFieldCallback(name as keyof FormValues, safeValue);
   }, [validateFieldCallback]);
 
   // ─── Soumission du formulaire ──────────────────────────────────────────────
@@ -151,7 +154,8 @@ export function useContactForm(): UseContactFormReturn {
     const hasError = errors[fieldName]?.severity === 'error';
     const hasWarning = errors[fieldName]?.severity === 'warning';
     const isTouchedField = touched[fieldName];
-    const hasValue = values[fieldName as keyof FormValues]?.trim() !== '';
+    const fieldValue = values[fieldName as keyof FormValues] ?? '';
+    const hasValue = fieldValue.trim() !== '';
 
     if (!isTouchedField && !hasValue) {
       return 'border-white/10 focus:border-[#2563EB]/50';
@@ -172,6 +176,34 @@ export function useContactForm(): UseContactFormReturn {
     return 'border-white/10 focus:border-[#2563EB]/50';
   }, [errors, touched, values]);
 
+  // ─── Classes pour les <select> (sans background pour garder bg-[#1e293b]) ──
+
+  const getSelectClasses = useCallback((fieldName: string): string => {
+    const hasError = errors[fieldName]?.severity === 'error';
+    const hasWarning = errors[fieldName]?.severity === 'warning';
+    const isTouchedField = touched[fieldName];
+    const fieldValue = values[fieldName as keyof FormValues] ?? '';
+    const hasValue = fieldValue.trim() !== '';
+
+    if (!isTouchedField && !hasValue) {
+      return 'border-white/10 focus:border-[#2563EB]/50';
+    }
+
+    if (hasError) {
+      return 'border-red-500/70 focus:border-red-500';
+    }
+
+    if (hasWarning) {
+      return 'border-amber-500/70 focus:border-amber-500';
+    }
+
+    if (hasValue && isTouchedField) {
+      return 'border-emerald-500/50 focus:border-emerald-500/70';
+    }
+
+    return 'border-white/10 focus:border-[#2563EB]/50';
+  }, [errors, touched, values]);
+
   // ─── Retour ────────────────────────────────────────────────────────────────
 
   return {
@@ -187,6 +219,7 @@ export function useContactForm(): UseContactFormReturn {
     resetForm,
     getFieldError,
     getFieldClasses,
+    getSelectClasses,
   };
 }
 

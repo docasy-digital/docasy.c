@@ -31,3 +31,6 @@ Thumbs.db
 
 # Vite cache (facultatif mais recommandé)
 .vite/
+
+.qwen/
+src/test/
