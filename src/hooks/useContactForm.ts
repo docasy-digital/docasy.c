@@ -6,6 +6,7 @@ import {
   validateContactForm,
 } from '../utils/formValidation';
 import { sendViaWhatsApp, ContactFormData } from '../utils/whatsapp';
+import { Country, getDefaultCountry } from '../utils/phoneCountries';
 
 // ─── Types du hook ─────────────────────────────────────────────────────────────
 
@@ -16,6 +17,7 @@ export interface UseContactFormReturn {
   values: FormValues;
   errors: Record<string, FieldError>;
   touched: Record<string, boolean>;
+  country: Country;
 
   // État de la soumission
   status: FormStatus;
@@ -27,6 +29,7 @@ export interface UseContactFormReturn {
   handleBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
   handleSubmit: (e: React.FormEvent) => void;
   resetForm: () => void;
+  handleCountryChange: (newCountry: Country) => void;
 
   // Utilitaires
   getFieldError: (fieldName: string) => FieldError | undefined;
@@ -36,10 +39,13 @@ export interface UseContactFormReturn {
 
 // ─── État initial du formulaire ────────────────────────────────────────────────
 
+const defaultCountry = getDefaultCountry();
+
 const initialFormValues: FormValues = {
   name: '',
   email: '',
   phone: '',
+  country: defaultCountry,
   service: '',
   budget: '',
   message: '',
@@ -52,6 +58,7 @@ export function useContactForm(): UseContactFormReturn {
   const [errors, setErrors] = useState<Record<string, FieldError>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [status, setStatus] = useState<FormStatus>('idle');
+  const [country, setCountry] = useState<Country>(defaultCountry);
 
   // ─── Validation d'un champ ─────────────────────────────────────────────────
 
@@ -158,6 +165,7 @@ export function useContactForm(): UseContactFormReturn {
     setErrors({});
     setTouched({});
     setStatus('idle');
+    setCountry(defaultCountry);
   }, []);
 
   // ─── Utilitaires ───────────────────────────────────────────────────────────
@@ -220,12 +228,20 @@ export function useContactForm(): UseContactFormReturn {
     return 'outline-white/10 focus:outline-[#2563EB]/50';
   }, [errors, touched, values]);
 
+  // ─── Changement de pays ────────────────────────────────────────────────────
+
+  const handleCountryChange = useCallback((newCountry: Country) => {
+    setCountry(newCountry);
+    setValues(prev => ({ ...prev, country: newCountry }));
+  }, []);
+
   // ─── Retour ────────────────────────────────────────────────────────────────
 
   return {
     values,
     errors,
     touched,
+    country,
     status,
     isSubmitting: status === 'submitting',
     isSuccess: status === 'success',
@@ -233,6 +249,7 @@ export function useContactForm(): UseContactFormReturn {
     handleBlur,
     handleSubmit,
     resetForm,
+    handleCountryChange,
     getFieldError,
     getFieldClasses,
     getSelectClasses,

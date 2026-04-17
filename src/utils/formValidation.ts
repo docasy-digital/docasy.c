@@ -1,5 +1,7 @@
 // ─── Types de validation ────────────────────────────────────────────────────────
 
+import { Country } from './phoneCountries';
+
 export interface FieldError {
   field: string;
   message: string;
@@ -149,6 +151,7 @@ export interface FormValues {
   name: string;
   email: string;
   phone: string;
+  country: Country;
   service: string;
   budget: string;
   message: string;

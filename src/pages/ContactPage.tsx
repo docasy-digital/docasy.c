@@ -6,6 +6,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { SERVICE_OPTIONS, BUDGET_OPTIONS, FieldError } from '../utils/formValidation';
 import { useContactForm } from '../hooks/useContactForm';
+import { PhoneInput } from '../components/PhoneInput';
 
 // ─── Composant d'affichage des erreurs ────────────────────────────────────────
 
@@ -95,6 +96,8 @@ function ContactSection() {
     getSelectClasses,
     isSubmitting,
     isSuccess,
+    country,
+    handleCountryChange,
   } = useContactForm();
 
   const contactInfo = [
@@ -309,18 +312,25 @@ function ContactSection() {
 
                     {/* Phone */}
                     <div>
-                      <label htmlFor="phone" className="block text-white/50 text-xs font-medium uppercase tracking-wider mb-2">
-                        Téléphone / WhatsApp
+                      <label className="block text-white/50 text-xs font-medium uppercase tracking-wider mb-2">
+                        Téléphone / WhatsApp *
                       </label>
-                      <input
-                        id="phone"
-                        type="tel"
-                        name="phone"
+                      <PhoneInput
                         value={values.phone}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        placeholder="+229 01 60 39 39 06"
-                        className={`w-full px-4 py-3 rounded-xl bg-white/5 outline outline-1 text-white placeholder-white/25 text-sm focus:bg-white/8 transition-all duration-200 ${getFieldClasses('phone')}`}
+                        country={country}
+                        onCountryChange={handleCountryChange}
+                        onChange={(val) =>
+                          handleChange({
+                            target: { name: 'phone', value: val },
+                          } as React.ChangeEvent<HTMLInputElement>)
+                        }
+                        onBlur={() =>
+                          handleBlur({
+                            target: { name: 'phone' },
+                          } as React.FocusEvent<HTMLInputElement>)
+                        }
+                        error={!!getFieldError('phone')}
+                        placeholder={`${country.dialCode} XX XX XX XX`}
                       />
                       {getFieldError('phone') && (
                         <FieldErrorDisplay message={getFieldError('phone')!.message} severity={getFieldError('phone')!.severity} />

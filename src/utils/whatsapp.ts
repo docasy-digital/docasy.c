@@ -6,10 +6,13 @@ export const WHATSAPP_NUMBER = '2290160393906';
 
 // ─── Type des données du formulaire ─────────────────────────────────────────────
 
+import { Country } from './phoneCountries';
+
 export interface ContactFormData {
   name: string;
   email: string;
   phone: string;
+  country: Country;
   service: string;
   budget: string;
   message: string;
@@ -26,6 +29,7 @@ export function formatWhatsAppMessage(data: ContactFormData): string {
     `👤 *Nom complet :* ${data.name}`,
     `📧 *Email :* ${data.email}`,
     data.phone ? `📱 *Téléphone :* ${data.phone}` : null,
+    data.country ? `🌍 *Pays :* ${data.country.name} (${data.country.flag})` : null,
     `🔧 *Service souhaité :* ${data.service}`,
     `💰 *Budget estimé :* ${data.budget}`,
     '',
