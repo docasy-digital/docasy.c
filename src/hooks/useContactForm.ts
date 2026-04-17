@@ -55,8 +55,8 @@ export function useContactForm(): UseContactFormReturn {
 
   // ─── Validation d'un champ ─────────────────────────────────────────────────
 
-  const validateFieldCallback = useCallback((fieldName: keyof FormValues, value: string) => {
-    const error = validateField(fieldName, value);
+  const validateFieldCallback = useCallback((fieldName: keyof FormValues, value: string, currentValues: FormValues) => {
+    const error = validateField(fieldName, value, currentValues);
     setErrors(prev => {
       const next = { ...prev };
       if (error) {
@@ -74,12 +74,28 @@ export function useContactForm(): UseContactFormReturn {
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     const safeValue = value ?? '';
-    setValues(prev => ({ ...prev, [name]: safeValue }));
 
-    // Si le champ a déjà été touché, on re-valide en temps réel
-    if (touched[name]) {
-      validateFieldCallback(name as keyof FormValues, safeValue);
-    }
+    setValues(prev => {
+      const nextValues = { ...prev, [name]: safeValue };
+      
+      // Validation du champ actuel s'il a déjà été touché
+      if (touched[name]) {
+        validateFieldCallback(name as keyof FormValues, safeValue, nextValues);
+      }
+
+      // Validation croisée : si on change le service, on re-valide le message
+      // car la règle de longueur peut changer (ex: Tunnel de Vente)
+      if (name === 'service' && (touched['message'] || prev.message.length > 0)) {
+        validateFieldCallback('message', prev.message, nextValues);
+      }
+
+      // Validation croisée : si on change le budget, on re-valide le téléphone
+      if (name === 'budget' && (touched['phone'] || prev.phone.length > 0)) {
+        validateFieldCallback('phone', prev.phone, nextValues);
+      }
+
+      return nextValues;
+    });
   }, [touched, validateFieldCallback]);
 
   // ─── Perte de focus ────────────────────────────────────────────────────────
@@ -88,8 +104,8 @@ export function useContactForm(): UseContactFormReturn {
     const { name, value } = e.target;
     const safeValue = value ?? '';
     setTouched(prev => ({ ...prev, [name]: true }));
-    validateFieldCallback(name as keyof FormValues, safeValue);
-  }, [validateFieldCallback]);
+    validateFieldCallback(name as keyof FormValues, safeValue, values);
+  }, [validateFieldCallback, values]);
 
   // ─── Soumission du formulaire ──────────────────────────────────────────────
 
@@ -158,22 +174,22 @@ export function useContactForm(): UseContactFormReturn {
     const hasValue = fieldValue.trim() !== '';
 
     if (!isTouchedField && !hasValue) {
-      return 'border-white/10 focus:border-[#2563EB]/50';
+      return 'outline-white/10 focus:outline-[#2563EB]/50';
     }
 
     if (hasError) {
-      return 'border-red-500/70 focus:border-red-500 bg-red-500/5';
+      return 'outline-red-500/70 focus:outline-red-500 bg-red-500/5';
     }
 
     if (hasWarning) {
-      return 'border-amber-500/70 focus:border-amber-500 bg-amber-500/5';
+      return 'outline-amber-500/70 focus:outline-amber-500 bg-amber-500/5';
     }
 
     if (hasValue && isTouchedField) {
-      return 'border-emerald-500/50 focus:border-emerald-500/70 bg-emerald-500/5';
+      return 'outline-emerald-500/50 focus:outline-emerald-500/70 bg-emerald-500/5';
     }
 
-    return 'border-white/10 focus:border-[#2563EB]/50';
+    return 'outline-white/10 focus:outline-[#2563EB]/50';
   }, [errors, touched, values]);
 
   // ─── Classes pour les <select> (sans background pour garder bg-[#1e293b]) ──
@@ -186,22 +202,22 @@ export function useContactForm(): UseContactFormReturn {
     const hasValue = fieldValue.trim() !== '';
 
     if (!isTouchedField && !hasValue) {
-      return 'border-white/10 focus:border-[#2563EB]/50';
+      return 'outline-white/10 focus:outline-[#2563EB]/50';
     }
 
     if (hasError) {
-      return 'border-red-500/70 focus:border-red-500';
+      return 'outline-red-500/70 focus:outline-red-500';
     }
 
     if (hasWarning) {
-      return 'border-amber-500/70 focus:border-amber-500';
+      return 'outline-amber-500/70 focus:outline-amber-500';
     }
 
     if (hasValue && isTouchedField) {
-      return 'border-emerald-500/50 focus:border-emerald-500/70';
+      return 'outline-emerald-500/50 focus:outline-emerald-500/70';
     }
 
-    return 'border-white/10 focus:border-[#2563EB]/50';
+    return 'outline-white/10 focus:outline-[#2563EB]/50';
   }, [errors, touched, values]);
 
   // ─── Retour ────────────────────────────────────────────────────────────────

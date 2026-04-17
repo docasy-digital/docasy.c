@@ -11,6 +11,25 @@ export interface ValidationResult {
   errors: FieldError[];
 }
 
+// ─── Options de formulaire (Source de vérité) ────────────────────────────────
+
+export const SERVICE_OPTIONS = [
+  'Création de Site Web',
+  'Tunnel de Vente',
+  'Marketing Digital / Community Management',
+  'Branding & Identité',
+  'Pack Digital Complet',
+  'Autre / Pas encore sûr',
+];
+
+export const BUDGET_OPTIONS = [
+  'Moins de 1 000 €',
+  '1 000 € – 3 000 €',
+  '3 000 € – 7 000 €',
+  '7 000 € – 15 000 €',
+  '15 000 € +',
+];
+
 // ─── Fonctions de validation individuelles ─────────────────────────────────────
 
 export function validateName(value: string | undefined | null): FieldError | null {
@@ -43,15 +62,33 @@ export function validateEmail(value: string | undefined | null): FieldError | nu
     return { field: 'email', message: "Veuillez entrer une adresse email valide.", severity: 'error' };
   }
 
+  // Avertissement pour les domaines génériques (non-bloquant)
+  const genericDomains = [
+    'gmail.com', 'hotmail.com', 'hotmail.fr', 'outlook.com', 'outlook.fr', 
+    'live.com', 'yahoo.com', 'yahoo.fr', 'icloud.com'
+  ];
+  const domain = trimmed.split('@')[1]?.toLowerCase();
+
+  if (domain && genericDomains.includes(domain)) {
+    return { 
+      field: 'email', 
+      message: "L'utilisation d'une adresse professionnelle est recommandée pour un traitement prioritaire.", 
+      severity: 'warning' 
+    };
+  }
+
   return null;
 }
 
-export function validatePhone(value: string | undefined | null): FieldError | null {
+export function validatePhone(value: string | undefined | null, selectedBudget?: string): FieldError | null {
   const trimmed = (value ?? '').trim();
+  const isHighBudget = selectedBudget === BUDGET_OPTIONS[BUDGET_OPTIONS.length - 1];
 
-  // Téléphone optionnel mais si renseigné, doit être valide
   if (!trimmed) {
-    return null; // Optionnel
+    if (isHighBudget) {
+      return { field: 'phone', message: 'Le numéro est requis pour les projets à haut budget.', severity: 'error' };
+    }
+    return null;
   }
 
   const phoneRegex = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\./0-9]*$/;
@@ -82,15 +119,21 @@ export function validateBudget(value: string | undefined | null): FieldError | n
   return null;
 }
 
-export function validateMessage(value: string | undefined | null): FieldError | null {
+export function validateMessage(value: string | undefined | null, selectedService?: string): FieldError | null {
   const trimmed = (value ?? '').trim();
 
   if (!trimmed) {
     return { field: 'message', message: 'Le message est requis.', severity: 'error' };
   }
 
-  if (trimmed.length < 10) {
-    return { field: 'message', message: 'Le message doit contenir au moins 10 caractères.', severity: 'error' };
+  // Validation conditionnelle pour Tunnel de Vente (100 caractères min)
+  const minLength = selectedService === 'Tunnel de Vente' ? 100 : 10;
+
+  if (trimmed.length < minLength) {
+    const errorMsg = selectedService === 'Tunnel de Vente' 
+      ? 'Pour un Tunnel de Vente, merci de détailler votre besoin (100 caractères minimum).'
+      : 'Le message doit contenir au moins 10 caractères.';
+    return { field: 'message', message: errorMsg, severity: 'error' };
   }
 
   if (trimmed.length > 2000) {
@@ -120,7 +163,7 @@ export function validateContactForm(values: FormValues): ValidationResult {
   const emailError = validateEmail(values.email);
   if (emailError) errors.push(emailError);
 
-  const phoneError = validatePhone(values.phone);
+  const phoneError = validatePhone(values.phone, values.budget);
   if (phoneError) errors.push(phoneError);
 
   const serviceError = validateService(values.service);
@@ -129,7 +172,7 @@ export function validateContactForm(values: FormValues): ValidationResult {
   const budgetError = validateBudget(values.budget);
   if (budgetError) errors.push(budgetError);
 
-  const messageError = validateMessage(values.message);
+  const messageError = validateMessage(values.message, values.service);
   if (messageError) errors.push(messageError);
 
   return {
@@ -140,14 +183,14 @@ export function validateContactForm(values: FormValues): ValidationResult {
 
 // ─── Validation d'un seul champ ────────────────────────────────────────────────
 
-export function validateField(fieldName: keyof FormValues, value: string | undefined | null): FieldError | null {
+export function validateField(fieldName: keyof FormValues, value: string | undefined | null, allValues?: FormValues): FieldError | null {
   switch (fieldName) {
     case 'name': return validateName(value);
     case 'email': return validateEmail(value);
-    case 'phone': return validatePhone(value);
+    case 'phone': return validatePhone(value, allValues?.budget);
     case 'service': return validateService(value);
     case 'budget': return validateBudget(value);
-    case 'message': return validateMessage(value);
+    case 'message': return validateMessage(value, allValues?.service);
     default: return null;
   }
 }

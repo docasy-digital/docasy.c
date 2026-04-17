@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import {
-  Mail, Phone, MapPin, Clock, ArrowRight, CheckCircle, Sparkles, Send,
+  Mail, Phone, MapPin, Clock, CheckCircle, Sparkles, Send,
   AlertCircle, AlertTriangle
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { SERVICE_OPTIONS, BUDGET_OPTIONS, FieldError } from '../utils/formValidation';
 import { useContactForm } from '../hooks/useContactForm';
 
 // ─── Composant d'affichage des erreurs ────────────────────────────────────────
@@ -13,20 +15,45 @@ interface FieldErrorDisplayProps {
 }
 
 function FieldErrorDisplay({ message, severity }: FieldErrorDisplayProps) {
+  const variants = {
+    hidden: { opacity: 0, y: -5 },
+    visible: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -5 },
+  };
+
   if (severity === 'warning') {
     return (
-      <div className="flex items-center gap-1.5 mt-1.5 text-amber-400/90 text-xs">
-        <AlertTriangle size={12} className="flex-shrink-0" />
-        <span>{message}</span>
-      </div>
+      <AnimatePresence>
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          variants={variants}
+          transition={{ duration: 0.2 }}
+          className="flex items-center gap-1.5 mt-1.5 text-amber-400/90 text-xs"
+        >
+          <AlertTriangle size={12} className="flex-shrink-0" />
+          <span>{message}</span>
+        </motion.div>
+      </AnimatePresence>
     );
   }
 
   return (
-    <div className="flex items-center gap-1.5 mt-1.5 text-red-400/90 text-xs">
-      <AlertCircle size={12} className="flex-shrink-0" />
-      <span>{message}</span>
-    </div>
+    // Framer Motion's AnimatePresence is crucial for exit animations
+    <AnimatePresence>
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        variants={variants}
+        transition={{ duration: 0.2 }}
+        className="flex items-center gap-1.5 mt-1.5 text-red-400/90 text-xs"
+      >
+        <AlertCircle size={12} className="flex-shrink-0" />
+        <span>{message}</span>
+      </motion.div>
+    </AnimatePresence>
   );
 }
 
@@ -69,23 +96,6 @@ function ContactSection() {
     isSubmitting,
     isSuccess,
   } = useContactForm();
-
-  const services = [
-    'Création de Site Web',
-    'Tunnel de Vente',
-    'Marketing Digital / Community Management',
-    'Branding & Identité',
-    'Pack Digital Complet',
-    'Autre / Pas encore sûr',
-  ];
-
-  const budgets = [
-    'Moins de 1 000 €',
-    '1 000 € – 3 000 €',
-    '3 000 € – 7 000 €',
-    '7 000 € – 15 000 €',
-    '15 000 € +',
-  ];
 
   const contactInfo = [
     {
@@ -246,7 +256,7 @@ function ContactSection() {
                             Veuillez corriger les erreurs ci-dessous.
                           </p>
                           <p className="text-red-400/60 text-xs">
-                            {Object.values(errors).filter(e => e.severity === 'error').length} champ(s) à corriger
+                            {Object.values(errors).filter((e: FieldError) => e.severity === 'error').length} champ(s) à corriger
                           </p>
                         </div>
                       </div>
@@ -269,7 +279,7 @@ function ContactSection() {
                           onChange={handleChange}
                           onBlur={handleBlur}
                           placeholder="Jean Dupont"
-                          className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white placeholder-white/25 text-sm focus:outline-none focus:bg-white/8 transition-all duration-200 ${getFieldClasses('name')}`}
+                          className={`w-full px-4 py-3 rounded-xl bg-white/5 outline outline-1 text-white placeholder-white/25 text-sm focus:bg-white/8 transition-all duration-200 ${getFieldClasses('name')}`}
                         />
                         {getFieldError('name') && (
                           <FieldErrorDisplay message={getFieldError('name')!.message} severity={getFieldError('name')!.severity} />
@@ -289,7 +299,7 @@ function ContactSection() {
                           onChange={handleChange}
                           onBlur={handleBlur}
                           placeholder="jean@entreprise.com"
-                          className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white placeholder-white/25 text-sm focus:outline-none focus:bg-white/8 transition-all duration-200 ${getFieldClasses('email')}`}
+                          className={`w-full px-4 py-3 rounded-xl bg-white/5 outline outline-1 text-white placeholder-white/25 text-sm focus:bg-white/8 transition-all duration-200 ${getFieldClasses('email')}`}
                         />
                         {getFieldError('email') && (
                           <FieldErrorDisplay message={getFieldError('email')!.message} severity={getFieldError('email')!.severity} />
@@ -310,7 +320,7 @@ function ContactSection() {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         placeholder="+229 01 60 39 39 06"
-                        className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white placeholder-white/25 text-sm focus:outline-none focus:bg-white/8 transition-all duration-200 ${getFieldClasses('phone')}`}
+                        className={`w-full px-4 py-3 rounded-xl bg-white/5 outline outline-1 text-white placeholder-white/25 text-sm focus:bg-white/8 transition-all duration-200 ${getFieldClasses('phone')}`}
                       />
                       {getFieldError('phone') && (
                         <FieldErrorDisplay message={getFieldError('phone')!.message} severity={getFieldError('phone')!.severity} />
@@ -330,10 +340,10 @@ function ContactSection() {
                           value={values.service}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          className={`w-full px-4 py-3 rounded-xl bg-[#1e293b] border text-white text-sm focus:outline-none transition-all duration-200 appearance-none ${getSelectClasses('service')}`}
+                          className={`w-full px-4 py-3 rounded-xl bg-[#1e293b] outline outline-1 text-white text-sm transition-all duration-200 appearance-none ${getSelectClasses('service')}`}
                         >
                           <option value="" disabled>Sélectionnez un service</option>
-                          {services.map(s => <option key={s} value={s}>{s}</option>)}
+                          {SERVICE_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
                         </select>
                         {getFieldError('service') && (
                           <FieldErrorDisplay message={getFieldError('service')!.message} severity={getFieldError('service')!.severity} />
@@ -351,10 +361,10 @@ function ContactSection() {
                           value={values.budget}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          className={`w-full px-4 py-3 rounded-xl bg-[#1e293b] border text-white text-sm focus:outline-none transition-all duration-200 appearance-none ${getSelectClasses('budget')}`}
+                          className={`w-full px-4 py-3 rounded-xl bg-[#1e293b] outline outline-1 text-white text-sm transition-all duration-200 appearance-none ${getSelectClasses('budget')}`}
                         >
                           <option value="" disabled>Sélectionnez une fourchette</option>
-                          {budgets.map(b => <option key={b} value={b}>{b}</option>)}
+                          {BUDGET_OPTIONS.map(b => <option key={b} value={b}>{b}</option>)}
                         </select>
                         {getFieldError('budget') && (
                           <FieldErrorDisplay message={getFieldError('budget')!.message} severity={getFieldError('budget')!.severity} />
@@ -375,7 +385,7 @@ function ContactSection() {
                         onBlur={handleBlur}
                         rows={5}
                         placeholder="Parlez-nous de vos objectifs, de votre calendrier et de toute exigence spécifique..."
-                        className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white placeholder-white/25 text-sm focus:outline-none focus:bg-white/8 transition-all duration-200 resize-none ${getFieldClasses('message')}`}
+                        className={`w-full px-4 py-3 rounded-xl bg-white/5 outline outline-1 text-white placeholder-white/25 text-sm focus:bg-white/8 transition-all duration-200 resize-none ${getFieldClasses('message')}`}
                       />
                       {getFieldError('message') && (
                         <FieldErrorDisplay message={getFieldError('message')!.message} severity={getFieldError('message')!.severity} />
