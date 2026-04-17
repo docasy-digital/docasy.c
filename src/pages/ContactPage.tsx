@@ -98,6 +98,7 @@ function ContactSection() {
     isSuccess,
     country,
     handleCountryChange,
+    isFormReady,
   } = useContactForm();
 
   const contactInfo = [
@@ -403,9 +404,15 @@ function ContactSection() {
                     </div>
 
                     {/* Submit */}
-                    <button
+                    <motion.button
                       type="submit"
                       disabled={isSubmitting}
+                      animate={isFormReady ? { boxShadow: [
+                        '0 0 20px rgba(37, 99, 235, 0.4), inset 0 0 20px rgba(37, 99, 235, 0.1)',
+                        '0 0 40px rgba(37, 99, 235, 0.8), 0 0 60px rgba(124, 58, 237, 0.4), inset 0 0 20px rgba(37, 99, 235, 0.2)',
+                        '0 0 20px rgba(37, 99, 235, 0.4), inset 0 0 20px rgba(37, 99, 235, 0.1)',
+                      ], scale: [1, 1.02, 1] } : { scale: 1 }}
+                      transition={isFormReady ? { duration: 2, repeat: Infinity, ease: 'easeInOut' } : { duration: 0 }}
                       className="w-full py-4 rounded-xl bg-gradient-to-r from-[#2563EB] to-[#7C3AED] text-white font-bold text-base shadow-2xl hover:shadow-[0_0_40px_rgba(37,99,235,0.4)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100 flex items-center justify-center gap-2"
                     >
                       {isSubmitting ? (
@@ -419,7 +426,7 @@ function ContactSection() {
                           <Send size={18} />
                         </>
                       )}
-                    </button>
+                    </motion.button>
 
                     <p className="text-center text-white/25 text-xs">
                       En envoyant ce formulaire, votre demande sera transmise directement via WhatsApp. Nous répondons sous 24h.

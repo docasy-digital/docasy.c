@@ -308,3 +308,28 @@ img {
   background-size: 200% auto;
   animation: shimmer 2s linear infinite;
 }
+
+/* ─── Animation personnalisée: Pulse Glow + Scale + Shadow ────────────────── */
+
+@keyframes submitPulseGlow {
+  0% {
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.4),
+                inset 0 0 20px rgba(37, 99, 235, 0.1);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(37, 99, 235, 0.8),
+                0 0 60px rgba(124, 58, 237, 0.4),
+                inset 0 0 20px rgba(37, 99, 235, 0.2);
+    transform: scale(1.02);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.4),
+                inset 0 0 20px rgba(37, 99, 235, 0.1);
+    transform: scale(1);
+  }
+}
+
+.submit-button-ready {
+  animation: submitPulseGlow 2s ease-in-out infinite;
+}

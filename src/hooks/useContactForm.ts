@@ -23,6 +23,7 @@ export interface UseContactFormReturn {
   status: FormStatus;
   isSubmitting: boolean;
   isSuccess: boolean;
+  isFormReady: boolean;
 
   // Handlers
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
@@ -235,6 +236,22 @@ export function useContactForm(): UseContactFormReturn {
     setValues(prev => ({ ...prev, country: newCountry }));
   }, []);
 
+  // ─── Vérification si le formulaire est prêt ────────────────────────────────
+
+  const isFormReady = useCallback(() => {
+    // Valider le formulaire complet
+    const validationResult = validateContactForm(values);
+    
+    // Le formulaire est prêt si :
+    // 1. Aucune erreur bloquante
+    // 2. Tous les champs requis ont du contenu
+    // 3. Au moins 3 champs ont été touchés (engagement utilisateur)
+    const hasNoErrors = validationResult.errors.filter(e => e.severity === 'error').length === 0;
+    const touchedFieldsCount = Object.values(touched).filter(Boolean).length;
+    
+    return hasNoErrors && touchedFieldsCount >= 3;
+  }, [values, touched]);
+
   // ─── Retour ────────────────────────────────────────────────────────────────
 
   return {
@@ -245,6 +262,7 @@ export function useContactForm(): UseContactFormReturn {
     status,
     isSubmitting: status === 'submitting',
     isSuccess: status === 'success',
+    isFormReady: isFormReady(),
     handleChange,
     handleBlur,
     handleSubmit,
