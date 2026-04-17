@@ -4,7 +4,7 @@ import {
   AlertCircle, AlertTriangle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SERVICE_OPTIONS, BUDGET_OPTIONS, FieldError } from '../utils/formValidation';
+import { SERVICE_OPTIONS, BUDGET_OPTIONS, FieldError, PLACEHOLDERS_BY_SERVICE, DEFAULT_MESSAGE_PLACEHOLDER } from '../utils/formValidation';
 import { useContactForm } from '../hooks/useContactForm';
 import { PhoneInput } from '../components/PhoneInput';
 
@@ -394,7 +394,7 @@ function ContactSection() {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         rows={5}
-                        placeholder="Parlez-nous de vos objectifs, de votre calendrier et de toute exigence spécifique..."
+                        placeholder={PLACEHOLDERS_BY_SERVICE[values.service] || DEFAULT_MESSAGE_PLACEHOLDER}
                         className={`w-full px-4 py-3 rounded-xl bg-white/5 outline outline-1 text-white placeholder-white/25 text-sm focus:bg-white/8 transition-all duration-200 resize-none ${getFieldClasses('message')}`}
                       />
                       {getFieldError('message') && (

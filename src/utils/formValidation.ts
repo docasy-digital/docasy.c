@@ -32,6 +32,19 @@ export const BUDGET_OPTIONS = [
   '15 000 € +',
 ];
 
+// ─── Placeholders dynamiques par service ────────────────────────────────────────
+
+export const PLACEHOLDERS_BY_SERVICE: Record<string, string> = {
+  'Création de Site Web': 'Décrivez le type de site (e-commerce, blog, portfolio...), vos fonctionnalités clés, vos concurrents, et vos objectifs...',
+  'Tunnel de Vente': 'Expliquez votre produit/service, votre audience cible, votre processus de vente actuel, et vos attentes en matière de conversion...',
+  'Marketing Digital / Community Management': 'Détaillez votre industrie, vos réseaux sociaux actuels, votre fréquence de publication souhaitée, et vos objectifs (engagement, followers, ventes)...',
+  'Branding & Identité': 'Décrivez votre entreprise, vos valeurs, votre public cible, votre ton de communication, et vos inspirations visuelles...',
+  'Pack Digital Complet': 'Parlez-nous de votre vision globale, vos objectifs à court et long terme, votre budget approx, et vos priorités...',
+  'Autre / Pas encore sûr': 'Parlez-nous de vos objectifs, de votre calendrier et de toute exigence spécifique...',
+};
+
+export const DEFAULT_MESSAGE_PLACEHOLDER = 'Parlez-nous de vos objectifs, de votre calendrier et de toute exigence spécifique...';
+
 // ─── Fonctions de validation individuelles ─────────────────────────────────────
 
 export function validateName(value: string | undefined | null): FieldError | null {
