@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom';
 import {
   ArrowRight, CheckCircle, Star, TrendingUp, Shield, Zap,
   Globe, Megaphone, Palette, Users, Award,
-  ChevronRight, BarChart3, Clock, ThumbsUp, Sparkles
+  ChevronRight, BarChart3, Clock, ThumbsUp, Sparkles,
+  Eye, DollarSign, TrendingDown, MessageCircle
 } from 'lucide-react';
 
 // ─── Hero Section ────────────────────────────────────────────────────────────
@@ -66,7 +67,7 @@ function Hero() {
             rel="noopener noreferrer"
             className="group flex items-center gap-2 px-8 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-semibold text-base hover:bg-white/10 hover:border-[#25D366]/40 transition-all duration-300 backdrop-blur-sm"
           >
-            <span className="text-[#25D366]">📱</span>
+            <MessageCircle size={18} className="text-[#25D366]" />
             <span>Contactez-nous sur WhatsApp</span>
           </a>
         </div>
@@ -99,10 +100,10 @@ function Hero() {
 // ─── Pain Points / Problem Section ───────────────────────────────────────────
 function Problems() {
   const problems = [
-    { icon: '😤', title: 'Invisible en Ligne', desc: 'Vos concurrents dominent les résultats de recherche pendant que votre entreprise est enterrée à la page 5.' },
-    { icon: '💸', title: 'Budget Publicitaire Gaspillé', desc: 'Dépenser des milliers en publicités qui attirent du trafic vers un site web qui ne convertit personne.' },
-    { icon: '📉', title: 'Pas de Stratégie Claire', desc: 'Des efforts marketing aléatoires sans système cohérent pour attirer régulièrement des clients.' },
-    { icon: '🕰️', title: 'Chronophage', desc: 'Essayer de gérer votre présence digitale vous-même au lieu de vous concentrer sur votre entreprise.' },
+    { icon: Eye, title: 'Invisible en Ligne', desc: 'Vos concurrents dominent les résultats de recherche pendant que votre entreprise est enterrée à la page 5.' },
+    { icon: DollarSign, title: 'Budget Publicitaire Gaspillé', desc: 'Dépenser des milliers en publicités qui attirent du trafic vers un site web qui ne convertit personne.' },
+    { icon: TrendingDown, title: 'Pas de Stratégie Claire', desc: 'Des efforts marketing aléatoires sans système cohérent pour attirer régulièrement des clients.' },
+    { icon: Clock, title: 'Chronophage', desc: 'Essayer de gérer votre présence digitale vous-même au lieu de vous concentrer sur votre entreprise.' },
   ];
 
   return (
@@ -126,16 +127,19 @@ function Problems() {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {problems.map((item) => (
-            <div
-              key={item.title}
-              className="group p-6 rounded-2xl bg-white/3 border border-white/8 hover:border-red-500/30 transition-all duration-300 hover:-translate-y-1"
-            >
-              <div className="text-4xl mb-4">{item.icon}</div>
-              <h3 className="text-white font-bold text-lg mb-2">{item.title}</h3>
-              <p className="text-white/50 text-sm leading-relaxed">{item.desc}</p>
-            </div>
-          ))}
+          {problems.map((item) => {
+            const IconComponent = item.icon;
+            return (
+              <div
+                key={item.title}
+                className="group p-6 rounded-2xl bg-white/3 border border-white/8 hover:border-red-500/30 transition-all duration-300 hover:-translate-y-1"
+              >
+                <IconComponent size={40} className="text-red-400 mb-4" />
+                <h3 className="text-white font-bold text-lg mb-2">{item.title}</h3>
+                <p className="text-white/50 text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            );
+          })}
         </div>
 
         <div className="mt-12 text-center">
@@ -483,7 +487,7 @@ function FinalCTA() {
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-10 py-4.5 rounded-2xl bg-[#25D366] text-white font-bold text-base hover:shadow-[0_0_30px_rgba(37,211,102,0.4)] transition-all duration-300 hover:scale-105 active:scale-95"
           >
-            <span>💬</span>
+            <MessageCircle size={18} />
             <span>Discuter sur WhatsApp</span>
           </a>
         </div>
