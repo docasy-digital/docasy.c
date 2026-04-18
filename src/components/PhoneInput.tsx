@@ -8,8 +8,8 @@ interface PhoneInputProps {
   country: Country;
   onCountryChange: (country: Country) => void;
   onChange: (value: string) => void;
-  onBlur: () => void;
-  error: boolean;
+  onBlur: (formattedValue: string) => void;
+  severity?: 'error' | 'warning' | null;
   placeholder?: string;
 }
 
@@ -19,7 +19,7 @@ export function PhoneInput({
   onCountryChange,
   onChange,
   onBlur,
-  error,
+  severity,
   placeholder = '+229 01 60 39 39 06',
 }: PhoneInputProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,12 +42,20 @@ export function PhoneInput({
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
-    // Formater automatiquement le numéro
-    const formatted = formatPhoneNumber(inputValue, country.code);
+    // Permettre la saisie libre sans formatage
+    onChange(inputValue);
+  };
+
+  const handlePhoneBlur = () => {
+    // Formater le numéro au blur
+    const formatted = formatPhoneNumber(value, country.code);
     onChange(formatted);
+    onBlur(formatted);
   };
 
   const handleCountrySelect = (selectedCountry: Country) => {
+    // handleCountryChange gère la mise à jour du country et du téléphone
+    // On n'appelle pas onChange pour éviter la validation en double
     onCountryChange(selectedCountry);
     setIsOpen(false);
     setSearchTerm('');
@@ -59,8 +67,8 @@ export function PhoneInput({
       c.dialCode.includes(searchTerm)
   );
 
-  const outlineColor = error ? 'outline-red-500/70' : 'outline-white/10';
-  const focusColor = error ? 'focus:outline-red-500' : 'focus:outline-[#2563EB]/50';
+  const outlineColor = severity === 'error' ? 'outline-red-500/70' : severity === 'warning' ? 'outline-amber-500/70' : 'outline-white/10';
+  const focusColor = severity === 'error' ? 'focus:outline-red-500' : severity === 'warning' ? 'focus:outline-amber-500' : 'focus:outline-[#2563EB]/50';
 
   return (
     <div className="relative">
@@ -135,7 +143,7 @@ export function PhoneInput({
           type="tel"
           value={value}
           onChange={handlePhoneChange}
-          onBlur={onBlur}
+          onBlur={handlePhoneBlur}
           placeholder={placeholder}
           className={`flex-1 px-4 py-3 rounded-xl bg-white/5 outline outline-1 text-white placeholder-white/25 text-sm focus:bg-white/8 transition-all duration-200 ${outlineColor} ${focusColor}`}
         />

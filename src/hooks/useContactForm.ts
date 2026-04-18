@@ -45,7 +45,7 @@ const defaultCountry = getDefaultCountry();
 const initialFormValues: FormValues = {
   name: '',
   email: '',
-  phone: '',
+  phone: defaultCountry.dialCode,
   country: defaultCountry,
   service: '',
   budget: '',
@@ -86,11 +86,9 @@ export function useContactForm(): UseContactFormReturn {
     setValues(prev => {
       const nextValues = { ...prev, [name]: safeValue };
       
-      // Validation du champ actuel s'il a déjà été touché
-      if (touched[name]) {
-        validateFieldCallback(name as keyof FormValues, safeValue, nextValues);
-      }
-
+      // Service et Budget maintiennent leur validation au onChange
+      // pour faire les validations croisées en temps réel
+      
       // Validation croisée : si on change le service, on re-valide le message
       // car la règle de longueur peut changer (ex: Tunnel de Vente)
       if (name === 'service' && (touched['message'] || prev.message.length > 0)) {
@@ -113,6 +111,17 @@ export function useContactForm(): UseContactFormReturn {
     const safeValue = value ?? '';
     setTouched(prev => ({ ...prev, [name]: true }));
     validateFieldCallback(name as keyof FormValues, safeValue, values);
+
+    // Validation croisée : si on change le service, on re-valide le message
+    // car la règle de longueur peut changer (ex: Tunnel de Vente)
+    if (name === 'service' && values.message.length > 0) {
+      validateFieldCallback('message', values.message, values);
+    }
+
+    // Validation croisée : si on change le budget, on re-valide le téléphone
+    if (name === 'budget' && values.phone !== values.country.dialCode) {
+      validateFieldCallback('phone', values.phone, values);
+    }
   }, [validateFieldCallback, values]);
 
   // ─── Soumission du formulaire ──────────────────────────────────────────────
@@ -233,7 +242,14 @@ export function useContactForm(): UseContactFormReturn {
 
   const handleCountryChange = useCallback((newCountry: Country) => {
     setCountry(newCountry);
-    setValues(prev => ({ ...prev, country: newCountry }));
+    // Mettre à jour le pays ET le téléphone (avec le nouveau préfixe) dans le même setState
+    setValues(prev => ({ ...prev, country: newCountry, phone: newCountry.dialCode }));
+    // Nettoyer l'erreur du champ téléphone quand on change de pays
+    setErrors(prev => {
+      const next = { ...prev };
+      delete next['phone'];
+      return next;
+    });
   }, []);
 
   // ─── Vérification si le formulaire est prêt ────────────────────────────────

@@ -113,7 +113,7 @@ function ContactSection() {
     {
       icon: Phone,
       color: '#25D366',
-      label: 'WhatsApp',
+      label: 'Appel / WhatsApp',
       value: '+229 01 60 39 39 06',
       sub: 'Discutez avec nous directement',
       href: 'https://wa.me/2290160393906',
@@ -220,7 +220,7 @@ function ContactSection() {
                   </h3>
 
                   <p className="text-white/55 text-base max-w-sm leading-relaxed mb-2">
-                    Merci de nous avoir contactés ! Votre demande a été transmise à notre équipe via WhatsApp.
+                    Merci de nous avoir contactés ! Votre demande a été transmise à notre équipe.
                   </p>
                   <p className="text-emerald-400/80 text-sm mb-6">
                     ⏱️ Nous reviendrons vers vous sous 24 heures.
@@ -233,7 +233,7 @@ function ContactSection() {
                     >
                       Envoyer un autre message
                     </button>
-                    <a
+                    {/* <a
                       href="https://wa.me/2290160393906"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -241,7 +241,7 @@ function ContactSection() {
                     >
                       <span>💬</span>
                       <span>Ouvrir WhatsApp</span>
-                    </a>
+                    </a> */}
                   </div>
                 </div>
               ) : (
@@ -314,7 +314,7 @@ function ContactSection() {
                     {/* Phone */}
                     <div>
                       <label className="block text-white/50 text-xs font-medium uppercase tracking-wider mb-2">
-                        Téléphone / WhatsApp *
+                        Téléphone / WhatsApp
                       </label>
                       <PhoneInput
                         value={values.phone}
@@ -325,12 +325,12 @@ function ContactSection() {
                             target: { name: 'phone', value: val },
                           } as React.ChangeEvent<HTMLInputElement>)
                         }
-                        onBlur={() =>
+                        onBlur={(formattedValue) =>
                           handleBlur({
-                            target: { name: 'phone' },
+                            target: { name: 'phone', value: formattedValue },
                           } as React.FocusEvent<HTMLInputElement>)
                         }
-                        error={!!getFieldError('phone')}
+                        severity={getFieldError('phone')?.severity}
                         placeholder={`${country.dialCode} XX XX XX XX`}
                       />
                       {getFieldError('phone') && (
@@ -422,14 +422,14 @@ function ContactSection() {
                         </>
                       ) : (
                         <>
-                          <span>Envoyer ma Demande via WhatsApp</span>
+                          <span>Envoyer ma Demande</span>
                           <Send size={18} />
                         </>
                       )}
                     </motion.button>
 
                     <p className="text-center text-white/25 text-xs">
-                      En envoyant ce formulaire, votre demande sera transmise directement via WhatsApp. Nous répondons sous 24h.
+                      En envoyant ce formulaire, votre demande sera transmise directement. Nous répondons sous 24h.
                     </p>
                   </form>
                 </>

@@ -13,7 +13,7 @@ export const COUNTRIES: Country[] = [
   { name: 'Afrique du Sud', code: 'ZA', dialCode: '+27', flag: '🇿🇦', format: '+27 XX XXX XXXX' },
   { name: 'Algérie', code: 'DZ', dialCode: '+213', flag: '🇦🇿', format: '+213 XXX XXX XXX' },
   { name: 'Angola', code: 'AO', dialCode: '+244', flag: '🇦🇴', format: '+244 XXX XXX XXX' },
-  { name: 'Bénin', code: 'BJ', dialCode: '+229', flag: '🇧🇯', format: '+229 XX XX XX XX' },
+  { name: 'Bénin', code: 'BJ', dialCode: '+229', flag: '🇧🇯', format: '+229 XX XX XX XX XX' },
   { name: 'Botswana', code: 'BW', dialCode: '+267', flag: '🇧🇼', format: '+267 XX XX XX XX' },
   { name: 'Burkina Faso', code: 'BF', dialCode: '+226', flag: '🇧🇫', format: '+226 XX XX XX XX' },
   { name: 'Burundi', code: 'BI', dialCode: '+257', flag: '🇧🇮', format: '+257 XX XX XXXX' },
@@ -178,33 +178,42 @@ export function formatPhoneNumber(value: string, countryCode: string): string {
   const country = COUNTRIES.find(c => c.code === countryCode);
   if (!country) return value;
 
-  // Enlever tous les caractères non numériques
-  const cleaned = value.replace(/\D/g, '');
-
-  // Ajouter le code pays s'il manque
-  let formatted = cleaned;
-  if (!cleaned.startsWith(country.dialCode.replace('+', ''))) {
-    formatted = country.dialCode.replace('+', '') + cleaned;
+  // Extraire seulement les chiffres
+  let digits = value.replace(/\D/g, '');
+  
+  // Retirer le code pays s'il commence par lui (pour éviter les doublons)
+  const dialCodeDigits = country.dialCode.replace('+', '');
+  if (digits.startsWith(dialCodeDigits)) {
+    digits = digits.slice(dialCodeDigits.length);
   }
 
-  // Appliquer le format
-  const pattern = country.format
-    .replace(/\+\d+\s?/, '') // Enlever le code pays du pattern
-    .replace(/X/g, 'X');
+  // Si vide, retourner juste le code pays
+  if (!digits) return country.dialCode;
 
-  // Formater selon le pattern
-  let result = '';
-  let valueIndex = 0;
-  for (let i = 0; i < pattern.length && valueIndex < formatted.length; i++) {
-    if (pattern[i] === 'X') {
-      result += formatted[valueIndex];
-      valueIndex++;
+  // Appliquer le format selon le pattern du pays
+  const pattern = country.format
+    .replace(/^\+\d+\s?/, '') // Enlever le code pays du pattern
+    .replace(/X/g, 'd'); // Remplacer X par d pour faciliter le matching
+
+  let result = country.dialCode + ' ';
+  let digitIndex = 0;
+
+  for (let i = 0; i < pattern.length && digitIndex < digits.length; i++) {
+    if (pattern[i] === 'd') {
+      result += digits[digitIndex];
+      digitIndex++;
     } else {
+      // Ajouter les séparateurs (espaces, tirets, etc)
       result += pattern[i];
     }
   }
 
-  return country.dialCode + ' ' + result.trim();
+  // Ajouter les chiffres restants si le pattern est plus court
+  if (digitIndex < digits.length) {
+    result += digits.slice(digitIndex);
+  }
+
+  return result.trim();
 }
 
 export function getCountryByDialCode(dialCode: string): Country | undefined {

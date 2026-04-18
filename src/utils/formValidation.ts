@@ -95,9 +95,17 @@ export function validateEmail(value: string | undefined | null): FieldError | nu
   return null;
 }
 
-export function validatePhone(value: string | undefined | null, selectedBudget?: string): FieldError | null {
+export function validatePhone(value: string | undefined | null, selectedBudget?: string, country?: Country): FieldError | null {
   const trimmed = (value ?? '').trim();
-  const isHighBudget = selectedBudget === BUDGET_OPTIONS[BUDGET_OPTIONS.length - 1];
+  const isHighBudget = selectedBudget === BUDGET_OPTIONS[BUDGET_OPTIONS.length - 1] || selectedBudget === BUDGET_OPTIONS[BUDGET_OPTIONS.length - 2];
+
+  // Si le champ ne contient que le préfixe du pays, considérer comme vide
+  if (country && trimmed === country.dialCode) {
+    if (isHighBudget) {
+      return { field: 'phone', message: 'Le numéro est requis pour les projets à haut budget.', severity: 'error' };
+    }
+    return null;
+  }
 
   if (!trimmed) {
     if (isHighBudget) {
@@ -111,8 +119,29 @@ export function validatePhone(value: string | undefined | null, selectedBudget?:
     return { field: 'phone', message: 'Veuillez entrer un numéro de téléphone valide.', severity: 'error' };
   }
 
-  if (trimmed.replace(/\D/g, '').length < 6) {
+  // Compter les chiffres sans le préfixe du pays
+  let allDigits = trimmed.replace(/\D/g, '');
+  const dialCodeDigits = country?.dialCode.replace('+', '') || '';
+  
+  // Enlever les chiffres du préfixe du total
+  if (dialCodeDigits && allDigits.startsWith(dialCodeDigits)) {
+    allDigits = allDigits.slice(dialCodeDigits.length);
+  }
+
+  if (allDigits.length < 5) {
     return { field: 'phone', message: 'Le numéro semble trop court.', severity: 'warning' };
+  }
+
+  // Vérifier que le nombre de chiffres correspond exactement au format du pays
+  if (country) {
+    const expectedDigits = (country.format.match(/X/g) || []).length;
+    if (allDigits.length !== expectedDigits) {
+      return { 
+        field: 'phone', 
+        message: `Veuillez entrer un numéro de téléphone valide.`, 
+        severity: 'error' 
+      };
+    }
   }
 
   return null;
@@ -179,7 +208,7 @@ export function validateContactForm(values: FormValues): ValidationResult {
   const emailError = validateEmail(values.email);
   if (emailError) errors.push(emailError);
 
-  const phoneError = validatePhone(values.phone, values.budget);
+  const phoneError = validatePhone(values.phone, values.budget, values.country);
   if (phoneError) errors.push(phoneError);
 
   const serviceError = validateService(values.service);
@@ -203,7 +232,7 @@ export function validateField(fieldName: keyof FormValues, value: string | undef
   switch (fieldName) {
     case 'name': return validateName(value);
     case 'email': return validateEmail(value);
-    case 'phone': return validatePhone(value, allValues?.budget);
+    case 'phone': return validatePhone(value, allValues?.budget, allValues?.country);
     case 'service': return validateService(value);
     case 'budget': return validateBudget(value);
     case 'message': return validateMessage(value, allValues?.service);
