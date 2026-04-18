@@ -212,7 +212,7 @@ export function getCountryByDialCode(dialCode: string): Country | undefined {
 }
 
 export function getDefaultCountry(): Country {
-  return COUNTRIES[1]; // Bénin par défaut
+  return COUNTRIES[3]; // Bénin par défaut
 }
 
 export function getCountryByCode(code: string): Country | undefined {
