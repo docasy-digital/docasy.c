@@ -252,7 +252,7 @@ function ContactSection() {
                     <p className="text-white/45 text-sm">Remplissez les détails ci-dessous et nous préparerons une proposition personnalisée pour vous.</p>
 
                     {/* Indicateur d'erreurs globales */}
-                    {Object.keys(errors).length > 0 && (
+                    {Object.values(errors).some((e: FieldError) => e.severity === 'error') && (
                       <div className="mt-4 flex items-start gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20">
                         <AlertCircle size={16} className="text-red-400 flex-shrink-0 mt-0.5" />
                         <div>
