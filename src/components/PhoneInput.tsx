@@ -80,7 +80,11 @@ export function PhoneInput({
             onClick={() => setIsOpen(!isOpen)}
             className={`px-3 py-3 rounded-xl bg-white/5 outline outline-1 text-white font-medium text-sm flex items-center gap-2 hover:bg-white/8 transition-all duration-200 ${outlineColor} ${focusColor} min-w-[140px] justify-between`}
           >
-            <span className="text-lg">{country.flag}</span>
+            <img
+              src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`}
+              alt={country.name}
+              className="w-5 h-auto rounded-sm object-contain"
+            />
             <span className="text-xs text-white/70">{country.code}</span>
             <ChevronDown size={14} className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
           </button>
@@ -120,7 +124,11 @@ export function PhoneInput({
                             : 'text-white/70 hover:bg-white/5'
                         }`}
                       >
-                        <span className="text-lg">{c.flag}</span>
+                        <img
+                          src={`https://flagcdn.com/w40/${c.code.toLowerCase()}.png`}
+                          alt={c.name}
+                          className="w-5 h-auto rounded-sm object-contain"
+                        />
                         <div className="flex-1">
                           <div className="text-white text-xs font-medium">{c.name}</div>
                           <div className="text-white/50 text-[10px]">{c.dialCode}</div>
