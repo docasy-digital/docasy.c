@@ -188,8 +188,8 @@ export function useContactForm(): UseContactFormReturn {
     const hasError = errors[fieldName]?.severity === 'error';
     const hasWarning = errors[fieldName]?.severity === 'warning';
     const isTouchedField = touched[fieldName];
-    const fieldValue = values[fieldName as keyof FormValues] ?? '';
-    const hasValue = fieldValue.trim() !== '';
+    const fieldValue = values[fieldName as keyof FormValues];
+    const hasValue = typeof fieldValue === 'string' ? fieldValue.trim() !== '' : !!fieldValue;
 
     if (!isTouchedField && !hasValue) {
       return 'outline-white/10 focus:outline-[#2563EB]/50';
@@ -216,8 +216,8 @@ export function useContactForm(): UseContactFormReturn {
     const hasError = errors[fieldName]?.severity === 'error';
     const hasWarning = errors[fieldName]?.severity === 'warning';
     const isTouchedField = touched[fieldName];
-    const fieldValue = values[fieldName as keyof FormValues] ?? '';
-    const hasValue = fieldValue.trim() !== '';
+    const fieldValue = values[fieldName as keyof FormValues];
+    const hasValue = typeof fieldValue === 'string' ? fieldValue.trim() !== '' : !!fieldValue;
 
     if (!isTouchedField && !hasValue) {
       return 'outline-white/10 focus:outline-[#2563EB]/50';

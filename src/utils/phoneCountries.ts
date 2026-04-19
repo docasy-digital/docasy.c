@@ -11,7 +11,7 @@ export interface Country {
 export const COUNTRIES: Country[] = [
   // ─── AFRIQUE (60 pays) ──────────────────────────────────────────────────────
   { name: 'Afrique du Sud', code: 'ZA', dialCode: '+27', flag: '🇿🇦', format: '+27 XX XXX XXXX' },
-  { name: 'Algérie', code: 'DZ', dialCode: '+213', flag: '🇦🇿', format: '+213 XXX XXX XXX' },
+  { name: 'Algérie', code: 'DZ', dialCode: '+213', flag: '🇩🇿', format: '+213 XXX XXX XXX' },
   { name: 'Angola', code: 'AO', dialCode: '+244', flag: '🇦🇴', format: '+244 XXX XXX XXX' },
   { name: 'Bénin', code: 'BJ', dialCode: '+229', flag: '🇧🇯', format: '+229 XX XX XX XX XX' },
   { name: 'Botswana', code: 'BW', dialCode: '+267', flag: '🇧🇼', format: '+267 XX XX XX XX' },
