@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { SERVICE_OPTIONS, BUDGET_OPTIONS, FieldError, PLACEHOLDERS_BY_SERVICE, DEFAULT_MESSAGE_PLACEHOLDER } from '../utils/formValidation';
 import { useContactForm } from '../hooks/useContactForm';
 import { PhoneInput } from '../components/PhoneInput';
+import { WHATSAPP_NUMBER } from '../utils/whatsapp';
 
 // ─── Composant d'affichage des erreurs ────────────────────────────────────────
 
@@ -101,6 +102,8 @@ function ContactSection() {
     isFormReady,
   } = useContactForm();
 
+  const whatsappDirectUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Bonjour DOCASY! Je souhaiterais discuter d'un projet.")}`;
+
   const contactInfo = [
     {
       icon: Mail,
@@ -114,9 +117,9 @@ function ContactSection() {
       icon: Phone,
       color: '#25D366',
       label: 'Appel / WhatsApp',
-      value: '+229 01 60 39 39 06',
+      value: `+${WHATSAPP_NUMBER.slice(0, 3)} ${WHATSAPP_NUMBER.slice(3, 5)} ${WHATSAPP_NUMBER.slice(5, 7)} ${WHATSAPP_NUMBER.slice(7, 9)} ${WHATSAPP_NUMBER.slice(9, 11)} ${WHATSAPP_NUMBER.slice(11)}`,
       sub: 'Discutez avec nous directement',
-      href: 'https://wa.me/2290160393906',
+      href: `https://wa.me/${WHATSAPP_NUMBER}`,
     },
     {
       icon: MapPin,
@@ -169,7 +172,7 @@ function ContactSection() {
 
             {/* WhatsApp quick CTA */}
             <a
-              href="https://wa.me/2290160393906?text=Bonjour%20DOCASY!%20Je%20souhaiterais%20discuter%20d'un%20projet."
+              href={whatsappDirectUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-3 w-full p-4 rounded-2xl bg-[#25D366] text-white font-bold hover:shadow-[0_0_30px_rgba(37,211,102,0.4)] transition-all duration-300 hover:scale-105 active:scale-95"

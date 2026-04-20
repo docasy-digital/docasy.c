@@ -6,8 +6,12 @@ import {
   Eye, DollarSign, TrendingDown, MessageCircle
 } from 'lucide-react';
 
+import { WHATSAPP_NUMBER } from '../utils/whatsapp';
+
 // ─── Hero Section ────────────────────────────────────────────────────────────
 function Hero() {
+  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Bonjour DOCASY ! Je souhaite discuter d'un projet.")}`;
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Background */}
@@ -62,7 +66,7 @@ function Hero() {
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform duration-200" />
           </Link>
           <a
-            href="https://wa.me/1234567890"
+            href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="group flex items-center gap-2 px-8 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-semibold text-base hover:bg-white/10 hover:border-[#25D366]/40 transition-all duration-300 backdrop-blur-sm"

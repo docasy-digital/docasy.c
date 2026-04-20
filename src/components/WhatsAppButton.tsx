@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { X, MessageCircle } from 'lucide-react';
+import { WHATSAPP_NUMBER } from '../utils/whatsapp';
 
 export default function WhatsAppButton() {
   const [showTooltip, setShowTooltip] = useState(true);
+  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Bonjour DOCASY ! Je souhaite discuter d'un projet.")}`;
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
@@ -21,7 +23,7 @@ export default function WhatsAppButton() {
 
       {/* WhatsApp button */}
       <a
-        href="https://wa.me/1234567890?text=Bonjour%20DOCASY%20!%20Je%20souhaite%20discuter%20d'un%20projet."
+        href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => setShowTooltip(false)}
