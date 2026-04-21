@@ -34,6 +34,7 @@ Thumbs.db
 
 # Local Dev Tools
 dev-server.js
+whatsapp-service.js
 
 # WhatsApp Sessions (Baileys)
 whatsapp-sessions/
