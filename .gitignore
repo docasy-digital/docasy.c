@@ -32,5 +32,11 @@ Thumbs.db
 # Vite cache (facultatif mais recommandé)
 .vite/
 
+# Local Dev Tools
+dev-server.js
+
+# WhatsApp Sessions (Baileys)
+whatsapp-sessions/
+
 .qwen/
 src/test/

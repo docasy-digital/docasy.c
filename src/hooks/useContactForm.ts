@@ -126,7 +126,7 @@ export function useContactForm(): UseContactFormReturn {
 
   // ─── Soumission du formulaire ──────────────────────────────────────────────
 
-  const handleSubmit = useCallback((e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Marquer tous les champs comme touchés
@@ -156,14 +156,28 @@ export function useContactForm(): UseContactFormReturn {
     setStatus('submitting');
 
     try {
-      // Envoi via WhatsApp
-      sendViaWhatsApp(values as ContactFormData);
+      // 1. Envoi via l'API Resend (si configurée)
+      const apiUrl = import.meta.env.VITE_API_URL || '/api/send-email';
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
 
-      // Succès après un court délai
-      setTimeout(() => {
-        setStatus('success');
-      }, 500);
-    } catch {
+      if (!response.ok) {
+        throw new Error('Erreur lors de l\'envoi de l\'email');
+      }
+
+      // 2. Envoi via WhatsApp (optionnel, mais utile comme secours)
+      // sendViaWhatsApp(values as ContactFormData);
+
+      setStatus('success');
+      // On garde les valeurs pour l'affichage du succès, mais on réinitialisera
+      // si l'utilisateur clique sur "Envoyer un autre message"
+    } catch (error) {
+      console.error('Submission error:', error);
       setStatus('error');
     }
   }, [values]);
