@@ -37,9 +37,11 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#2563EB] to-[#7C3AED] flex items-center justify-center shadow-lg group-hover:shadow-[0_0_20px_rgba(37,99,235,0.5)] transition-all duration-300">
-              <Zap size={18} className="text-white" fill="white" />
-            </div>
+            <img 
+              src="/images/docasy-logo.png" 
+              alt="DOCASY Logo" 
+              className="w-10 h-10 rounded-xl object-contain transition-transform duration-300 group-hover:scale-110"
+            />
             <span className="text-xl font-bold tracking-wider text-white">
               DOC<span className="gradient-text">ASY</span>
             </span>

@@ -52,9 +52,11 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#2563EB] to-[#7C3AED] flex items-center justify-center shadow-lg">
-                <Zap size={18} className="text-white" fill="white" />
-              </div>
+              <img 
+                src="/images/docasy-logo.png" 
+                alt="DOCASY Logo" 
+                className="w-9 h-9 object-contain rounded-xl"
+              />
               <span className="text-xl font-bold tracking-wider text-white">
                 DOC<span className="gradient-text">ASY</span>
               </span>
