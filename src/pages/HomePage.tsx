@@ -353,17 +353,17 @@ function WhyUs() {
 function Testimonials() {
   const testimonials = [
     {
-      name: 'Sarah Johnson',
+      name: 'Sarah Hounvo',
       role: 'CEO, TechVenture Inc.',
-      avatar: 'SJ',
+      avatar: <img src="/images/testimonials/sarah-hounvo-pic.jpg" alt="Photo de Sarah Hounvo" className="w-12 h-12 rounded-xl" />,
       rating: 5,
       text: 'DOCASY a complètement transformé notre présence en ligne. Dans les 3 mois suivant le lancement de notre nouveau site web et tunnel de vente, nous avons constaté une augmentation de 280% des leads qualifiés. Un travail absolument exceptionnel.',
       result: '+280% de Leads',
     },
     {
-      name: 'Marcus Chen',
+      name: 'Marcus Akpohou',
       role: 'Fondateur, GrowthLab',
-      avatar: 'MC',
+      avatar: <img src="/images/testimonials/marcus-akpohou-pic.jpg" alt="Photo de Marcus Akpohou" className="w-12 h-12 rounded-xl" />,
       rating: 5,
       text: 'Le pack branding était au-delà de mes attentes. Ils ont vraiment compris notre vision et l\'ont transformée en une identité visuelle qui résonne avec notre marché cible. Professionnel, rapide et créatif.',
       result: 'Revenus x3',
@@ -371,7 +371,7 @@ function Testimonials() {
     {
       name: 'Amelia Torres',
       role: 'Directrice, Luxe Beauty',
-      avatar: 'AT',
+      avatar: <img src="/images/testimonials/amelia-torres-pic.jpg" alt="Photo de Amelia Torres" className="w-12 h-12 rounded-xl" />,
       rating: 5,
       text: 'Notre tunnel de vente construit par DOCASY convertit à 18% — la moyenne du secteur est de 2-3%. Leur approche stratégique du marketing digital est véritablement de classe mondiale.',
       result: '18% de Conversion',
