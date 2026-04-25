@@ -37,7 +37,7 @@ function OurStory() {
           <div className="relative">
             <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
               <img
-                src="/images/about-team.jpg"
+                src="/images/about-team.png"
                 alt="Équipe DOCASY"
                 className="w-full h-80 md:h-96 object-cover"
               />
